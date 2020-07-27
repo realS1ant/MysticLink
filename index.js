@@ -1,7 +1,5 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
-const fs = require('fs');
 const fetch = require('node-fetch');
 const mysql = require('mysql');
 const btoa = require('btoa');

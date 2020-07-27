@@ -7,6 +7,8 @@ require('dotenv').config();
 
 const scope = 'identify';
 const redirecturi = `http%3A%2F%2Flocalhost%3A3000%2Fcallback`;
+const whitelist = ['::ffff:127.0.0.1'];
+
 
 const app = express();
 app.use(express.json({ extended: false }));
@@ -61,7 +63,17 @@ app.get('/discord', (req, res) => {
     res.redirect(`https://discord.com/oauth2/authorize?client_id=735301490838863912&redirect_uri=${redirecturi}&response_type=code&scope=${scope}&state=${code}`)
 });
 
+app.get('/api/debug/link', (req, res) => {
+    console.log(`IP Address: ${req.ip}`);
+
+});
+
 app.get('/api/link', async (req, res) => {
+    if (!whitelist.includes(req.ip)) {
+        res.status(200).json({ 'message': 'Unauthorized!' });
+        console.log(`Denied request from IP: ${req.ip}`)
+        return;
+    }
     if (!req.query.uuid) {
         res.status(200).json({ 'message': 'No UUID Specified!' });
         return;
